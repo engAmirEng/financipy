@@ -9,7 +9,7 @@ python_files = [
 
 # ==== Coverage ====
 [tool.coverage.run]
-include = ["name_goes_here/**"]
+include = ["financipy/**"]
 omit = ["*/migrations/*", "*/tests/*"]
 plugins = ["django_coverage_plugin"]
 
@@ -31,7 +31,7 @@ known_first_party = [
     "graphene",
     "graphene_django"
 ]
-known_apps=["name_goes_here"]
+known_apps=["financipy"]
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "APPS", "LOCALFOLDER"]
 skip = ["venv/"]
 skip_glob = ["**/migrations/*.py"]

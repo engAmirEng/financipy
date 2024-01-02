@@ -3,11 +3,11 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UsersConfig(AppConfig):
-    name = "name_goes_here.users"
+    name = "financipy.users"
     verbose_name = _("Users")
 
     def ready(self):
         try:
-            import name_goes_here.users.signals  # noqa: F401
+            import financipy.users.signals  # noqa: F401
         except ImportError:
             pass

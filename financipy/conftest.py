@@ -1,7 +1,7 @@
 import pytest
 
-from name_goes_here.users.models import User
-from name_goes_here.users.tests.factories import UserFactory
+from financipy.users.models import User
+from financipy.users.tests.factories import UserFactory
 
 
 @pytest.fixture(autouse=True)

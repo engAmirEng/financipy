@@ -65,8 +65,8 @@ REST_FRAMEWORK = {
 # drf-spectacular
 # -------------------------------------------------------------------------------
 SPECTACULAR_SETTINGS = {
-    "TITLE": "name_goes_here API",
-    "DESCRIPTION": "Documentation of API endpoints of name_goes_here",
+    "TITLE": "financipy API",
+    "DESCRIPTION": "Documentation of API endpoints of financipy",
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }

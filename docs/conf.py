@@ -27,9 +27,9 @@ django.setup()
 
 # -- Project information -----------------------------------------------------
 
-project = "name_goes_here"
-copyright = """2023, author_name_goes_here"""
-author = "author_name_goes_here"
+project = "financipy"
+copyright = """2024, Amir Khalife"""
+author = "Amir Khalife"
 
 
 # -- General configuration ---------------------------------------------------

@@ -84,7 +84,7 @@ CACHES = {
 # APPS
 # ------------------------------------------------------------------------------
 LOCAL_APPS = [
-    "name_goes_here.users",
+    "financipy.users",
 ]
 THIRD_PARTY_APPS = clean_ellipsis(
     [

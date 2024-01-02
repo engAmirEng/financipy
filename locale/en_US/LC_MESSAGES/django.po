@@ -1,6 +1,6 @@
-# Translations for the name_goes_here project
-# Copyright (C) 2023 author_name_goes_here
-# author_name_goes_here <email_goes_here>, 2023.
+# Translations for the financipy project
+# Copyright (C) 2024 financipy
+# Amir Khalife <eng.amir.bu@gmail.com>, 2024.
 #
 #, fuzzy
 msgid ""

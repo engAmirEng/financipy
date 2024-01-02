@@ -1,6 +1,6 @@
 // For format details, see https://containers.dev/implementors/json_reference/
 {
-    "name": "name_goes_here_dev",
+    "name": "financipy_dev",
     "dockerComposeFile": [
         "../local.yml"
     ],

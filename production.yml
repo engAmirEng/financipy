@@ -13,10 +13,10 @@ services:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
 
-    image: name_goes_here_production_django
+    image: financipy_production_django
     volumes:
-      - production_django_media:/app/name_goes_here/media
-      - production_django_logs:/app/name_goes_here/logs
+      - production_django_media:/app/financipy/media
+      - production_django_logs:/app/financipy/logs
     depends_on:
       - postgres
       - redis
@@ -29,7 +29,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
-    image: name_goes_here_production_postgres
+    image: financipy_production_postgres
     volumes:
       - production_postgres_data:/var/lib/postgresql/data
       - production_postgres_data_backups:/backups
@@ -41,24 +41,24 @@ services:
 
   celeryworker:
     <<: *django
-    image: name_goes_here_production_celeryworker
+    image: financipy_production_celeryworker
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
-    image: name_goes_here_production_celerybeat
+    image: financipy_production_celerybeat
     command: /start-celerybeat
 
   flower:
     <<: *django
-    image: name_goes_here_production_flower
+    image: financipy_production_flower
     command: /start-flower
 
   nginx:
     build:
       context: .
       dockerfile: ./compose/production/nginx/Dockerfile
-    image: name_goes_here_local_nginx
+    image: financipy_local_nginx
     depends_on:
       - django
     volumes:
@@ -68,7 +68,7 @@ services:
       - '0.0.0.0:80:80'
       - '0.0.0.0:443:443'
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://domain_name_goes_here/acme/auto"]
+      test: ["CMD", "curl", "-f", "http://financipy.nilu.website/acme/auto"]
       interval: 90s
       timeout: 90s
       retries: 3

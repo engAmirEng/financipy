@@ -2,7 +2,7 @@ from django.conf import settings
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from name_goes_here.users.rest.views import UserViewSet
+from financipy.users.rest.views import UserViewSet
 
 if settings.DEBUG:
     router = DefaultRouter()

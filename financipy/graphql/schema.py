@@ -2,8 +2,8 @@ import graphene
 from django.conf import settings
 from graphene_django.debug import DjangoDebug
 
-from name_goes_here.users.schema import Mutation as UsersMutation
-from name_goes_here.users.schema import Query as UsersQuery
+from financipy.users.schema import Mutation as UsersMutation
+from financipy.users.schema import Query as UsersQuery
 
 
 class Query(UsersQuery, graphene.ObjectType):

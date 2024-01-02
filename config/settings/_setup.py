@@ -7,8 +7,8 @@ import environ
 from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
-# name_goes_here/
-APPS_DIR = BASE_DIR / "name_goes_here"
+# financipy/
+APPS_DIR = BASE_DIR / "financipy"
 
 
 # handy funcs
