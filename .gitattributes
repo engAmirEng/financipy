@@ -1,0 +1,4 @@
+* text=auto
+
+# mark njs-acme.js as vendored
+compose/production/nginx/njs-acme* linguist-vendored
