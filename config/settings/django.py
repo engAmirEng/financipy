@@ -92,6 +92,7 @@ THIRD_PARTY_APPS = clean_ellipsis(
         "corsheaders",
         "debug_toolbar" if PLUGGABLE_FUNCS.DEBUG_TOOLBAR else ...,
         "django_celery_beat",
+        "django_celery_results",
         "django_filters",
         "drf_spectacular",
         "graphene_django",
