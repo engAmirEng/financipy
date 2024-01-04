@@ -25,11 +25,12 @@ target-version = ['py311']
 profile = "black"
 line_length = 119
 known_first_party = [
+    "aiogram",
     "config",
     "django",
-    "rest_framework",
     "graphene",
-    "graphene_django"
+    "graphene_django",
+    "rest_framework",
 ]
 known_apps=["financipy"]
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "APPS", "LOCALFOLDER"]
