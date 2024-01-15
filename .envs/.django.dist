@@ -20,6 +20,9 @@ PLUGGABLES=DEBUG_TOOLBAR,NO_PASS_VALIDATION,SERVE_STATICFILES
 # {int, default to 1}
 #MAX_LOG_FILE_COUNT=
 TELEGRAM_BOT_TOKEN=some-telegram-bot-token
+# {path, default to telegram-webhook/}
+#TELEGRAM_WEBHOOK_URL=
+TELEGRAM_WEBHOOK_SECRET=some-telegram-unsafe-token
 # {url, default no proxy is being used}
 #PROXY=
 
