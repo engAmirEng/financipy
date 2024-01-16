@@ -1,11 +1,8 @@
 from aiogram import Dispatcher
-from aiogram.filters import CommandStart
-from aiogram.types import Message
-from aiogram.utils.markdown import hbold
+
+from financipy.core.dispatchers import router as core_router
+from financipy.technical_analysis.dispatchers import router as technical_analysis_router
 
 dp = Dispatcher()
-
-
-@dp.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
-    await message.answer(f"Hello, {hbold(message.from_user.full_name)}!")
+dp.include_router(core_router)
+dp.include_router(technical_analysis_router)
