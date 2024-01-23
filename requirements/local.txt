@@ -23,7 +23,7 @@ django-debug-toolbar==4.2.0; python_version >= '3.8'
 docutils==0.20.1; python_version >= '3.7'
 exceptiongroup==1.2.0; python_version < '3.11'
 factory-boy==3.3.0; python_version >= '3.7'
-faker==22.2.0; python_version >= '3.8'
+faker==22.5.0; python_version >= '3.8'
 filelock==3.13.1; python_version >= '3.8'
 hyperlink==21.0.0
 identify==2.5.33; python_version >= '3.8'
