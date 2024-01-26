@@ -84,6 +84,7 @@ CACHES = {
 # APPS
 # ------------------------------------------------------------------------------
 LOCAL_APPS = [
+    "financipy.technical_analysis",
     "financipy.telegram_bot",
     "financipy.users",
 ]
@@ -182,6 +183,9 @@ STATICFILES_FINDERS = [
 ]
 
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },

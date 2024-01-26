@@ -16,6 +16,7 @@ from django.utils.translation import gettext as _
 
 from financipy.core.dispatchers import MenuCallback, MenuType
 
+from .models import OHLCModel
 from .strategy_utils.hh_hl_lh_ll import get_tline_output, getHigherHighs, getHigherLows, getLowerHighs, getLowerLows
 
 router = Router(name="technical_analysis")
@@ -46,10 +47,14 @@ async def process_date_technical_builder_handler(message: Message, state: FSMCon
     await state.update_data(date_after=message.text)
     data = await state.get_data()
     await state.clear()
+
     symbol_name = data["symbol_name"]
     date_after = data["date_after"]
 
-    df = get_df(symbol_name=symbol_name, date_after=date_after)
+    df = await OHLCModel.objects.get_ensured_df(symbol_name)
+    df = df[df["Date"] > date_after]
+    df = df.reset_index()
+
     buf = io.BytesIO()
     df.index = df["Date"]
     mpf.plot(df, type="candle", style="yahoo", volume=True, savefig=buf)
@@ -89,9 +94,13 @@ class TechnicalBuilderCallback(CallbackData, prefix="technical_builder"):
 async def process_main_technical_builder_handler(
     query: CallbackQuery, callback_data: TechnicalBuilderCallback, state: FSMContext, bot: Bot
 ):
-    df = get_df(symbol_name=callback_data.symbol_name, date_after=callback_data.date_after)
+    df = await OHLCModel.objects.get_ensured_df(callback_data.symbol_name)
+    df = df[df["Date"] > callback_data.date_after]
+    df = df.reset_index()
+
     addplot = []
     tlines = []
+
     ikbuilder = InlineKeyboardBuilder()
 
     if callback_data.hammer:
@@ -145,18 +154,3 @@ async def process_main_technical_builder_handler(
         media=InputMediaPhoto(media=BufferedInputFile(file=figure, filename="fdfd")),
         reply_markup=ikbuilder.as_markup(),
     )
-
-
-def get_df(symbol_name: str, date_after) -> pd.DataFrame:
-    # df = pytse_client.download(symbols=symbol_name, adjust=True)
-    df = pd.read_csv("media/aa.csv")
-    rename_mapping = {}
-    for column in df.columns.tolist():
-        rename_mapping[column] = column.title()
-    df = df.rename(columns=rename_mapping)
-
-    df["Date"] = pd.to_datetime(df["Date"])
-
-    df = df[df["Date"] > date_after]
-    df = df.reset_index()
-    return df
