@@ -5,7 +5,8 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
 from aiogram.types import Update
 from django.conf import settings
-from django.http import HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden
+from rest_framework import status
 
 from financipy.utils.decorators import require_http_methods
 
@@ -20,5 +21,6 @@ def get_webhook_view(dp: Dispatcher):
             return HttpResponseForbidden()
         update = Update.model_validate(json.loads(request.body), context={"bot": bot})
         await dp.feed_webhook_update(bot=bot, update=update)
+        return HttpResponse(status=status.HTTP_200_OK)
 
     return webhook_view
