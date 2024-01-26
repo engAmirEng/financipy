@@ -16,6 +16,8 @@ from django.utils.translation import gettext as _
 
 from financipy.core.dispatchers import MenuCallback, MenuType
 
+from .strategy_utils.hh_hl_lh_ll import get_tline_output, getHigherHighs, getHigherLows, getLowerHighs, getLowerLows
+
 router = Router(name="technical_analysis")
 
 
@@ -49,6 +51,7 @@ async def process_date_technical_builder_handler(message: Message, state: FSMCon
 
     df = get_df(symbol_name=symbol_name, date_after=date_after)
     buf = io.BytesIO()
+    df.index = df["Date"]
     mpf.plot(df, type="candle", style="yahoo", volume=True, savefig=buf)
     buf.seek(0)
     figure = buf.read()
@@ -88,14 +91,15 @@ async def process_main_technical_builder_handler(
 ):
     df = get_df(symbol_name=callback_data.symbol_name, date_after=callback_data.date_after)
     addplot = []
+    tlines = []
     ikbuilder = InlineKeyboardBuilder()
 
     if callback_data.hammer:
-        df["hammer"] = talib.CDLHAMMER(df["open"], df["high"], df["low"], df["close"])
+        df["Hammer"] = talib.CDLHAMMER(df["Open"], df["High"], df["Low"], df["Close"])
         hammer_df = pd.DataFrame(index=df.index)
-        hammer_df["close"] = np.where(df["hammer"] > 0, df["close"], np.nan)
-        hammer_df["my"] = hammer_df["close"] + 50
-        hammer_plt = mpf.make_addplot(hammer_df["my"], scatter=True, markersize=20, color="b", secondary_y=False)
+        hammer_df["Close"] = np.where(df["Hammer"] > 0, df["Close"], np.nan)
+        hammer_df["My"] = hammer_df["Close"] + 50
+        hammer_plt = mpf.make_addplot(hammer_df["My"], scatter=True, markersize=20, color="b", secondary_y=False)
         addplot.append(hammer_plt)
 
         local_callback_data = deepcopy(callback_data)
@@ -107,15 +111,33 @@ async def process_main_technical_builder_handler(
         ikbuilder.button(text=_("add hammer"), callback_data=local_callback_data)
 
     if callback_data.trend:
-        local_callback_data = deepcopy(callback_data)
-        local_callback_data.hammer = False
+        close = df["Close"].values
+        order = 5
+        K = 2
+        hh = getHigherHighs(close, order, K)
+        hl = getHigherLows(close, order, K)
+        ll = getLowerLows(close, order, K)
+        lh = getLowerHighs(close, order, K)
+
+        hh_tlines = get_tline_output(hh, df)
+        tlines.append({"tlines": hh_tlines, "colors": "b"})
+        hl_tlines = get_tline_output(hl, df)
+        tlines.append({"tlines": hl_tlines, "colors": "b"})
+        ll_tlines = get_tline_output(ll, df)
+        tlines.append({"tlines": ll_tlines, "colors": "r"})
+        lh_tlines = get_tline_output(lh, df)
+        tlines.append({"tlines": lh_tlines, "colors": "r"})
+
+        local_callback_data = TechnicalBuilderCallback(**callback_data.model_dump())
+        local_callback_data.trend = False
         ikbuilder.button(text=_("remove trend line"), callback_data=local_callback_data)
     else:
-        local_callback_data = deepcopy(callback_data)
-        local_callback_data.hammer = True
+        local_callback_data = TechnicalBuilderCallback(**callback_data.model_dump())
+        local_callback_data.trend = True
         ikbuilder.button(text=_("add tren line"), callback_data=local_callback_data)
     buf = io.BytesIO()
-    mpf.plot(df, type="candle", style="yahoo", addplot=addplot, volume=True, savefig=buf)
+    df.index = df["Date"]
+    mpf.plot(df, type="candle", style="yahoo", addplot=addplot, tlines=tlines, volume=True, savefig=buf)
     buf.seek(0)
     figure = buf.read()
 
@@ -128,7 +150,13 @@ async def process_main_technical_builder_handler(
 def get_df(symbol_name: str, date_after) -> pd.DataFrame:
     # df = pytse_client.download(symbols=symbol_name, adjust=True)
     df = pd.read_csv("media/aa.csv")
-    df.index = pd.DatetimeIndex(df["date"])
+    rename_mapping = {}
+    for column in df.columns.tolist():
+        rename_mapping[column] = column.title()
+    df = df.rename(columns=rename_mapping)
 
-    df = df.loc[date_after::]
+    df["Date"] = pd.to_datetime(df["Date"])
+
+    df = df[df["Date"] > date_after]
+    df = df.reset_index()
     return df
