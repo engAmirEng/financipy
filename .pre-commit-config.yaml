@@ -1,4 +1,4 @@
-exclude: '^compose/production/nginx/njs-acme.*.js|^docs/|/migrations/'
+exclude: '^docs/|/migrations/'
 default_stages: [commit]
 
 repos:
