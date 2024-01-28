@@ -274,7 +274,7 @@ tags
 dump.rdb
 
 ### Project template
-financipy/media/
+media/
 
 .pytest_cache/
 .ipython/
