@@ -24,6 +24,11 @@ services:
       - ./.envs/.postgres
     command: /start
 
+  telegrampoll:
+    <<: *django
+    image: financipy_production_telegrampoll
+    command: /start-telegrampoll
+
   postgres:
     build:
       context: .
