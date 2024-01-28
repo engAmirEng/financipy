@@ -11,10 +11,11 @@ RUN --mount=type=cache,target=var/cache/apt/archives apt-get update && apt-get i
   # dependencies for building Python packages
   build-essential \
   # psycopg2 dependencies
-  libpq-dev
+  libpq-dev \
+  wget
 
 
-RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
+RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && tar -xzf ta-lib-0.4.0-src.tar.gz && \
     cd ta-lib/ && ./configure --prefix=/usr && make && make install
 
 # Requirements are installed here to ensure they will be cached.
