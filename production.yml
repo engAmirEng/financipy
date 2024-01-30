@@ -1,8 +1,6 @@
 version: '3'
 
 volumes:
-  production_postgres_data: {}
-  production_postgres_data_backups: {}
   production_django_media: {}
   production_django_logs: {}
 
@@ -17,28 +15,18 @@ services:
       - production_django_media:/app/financipy/media
       - production_django_logs:/app/financipy/logs
     depends_on:
-      - postgres
       - redis
     env_file:
       - ./.envs/.django
       - ./.envs/.postgres
     command: /start
+    extra_hosts:
+      - 'host-gateway:host-gateway'
 
   telegrampoll:
     <<: *django
     image: financipy_production_telegrampoll
     command: /start-telegrampoll
-
-  postgres:
-    build:
-      context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
-    image: financipy_production_postgres
-    volumes:
-      - production_postgres_data:/var/lib/postgresql/data
-      - production_postgres_data_backups:/backups
-    env_file:
-      - ./.envs/.postgres
 
   redis:
     image: redis:6
