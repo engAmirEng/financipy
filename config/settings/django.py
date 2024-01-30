@@ -2,6 +2,7 @@ import os
 
 import environ
 
+import django.core.exceptions
 from django.utils.translation import gettext_lazy as __
 
 from ._setup import APPS_DIR, BASE_DIR, PLUGGABLE_FUNCS, clean_ellipsis, log_ignore_modules
@@ -54,10 +55,13 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 
 # DATABASES
 # ------------------------------------------------------------------------------
-if env("DATABASE_URL", default=None) is not None:
+try:
+    # TODO why try except?
+    # when DATABASE_URL="" then env("DATABASE_URL", default=None) returns None!!
+
     # just for "docs" and to run project in a dummy mode
     DATABASES = {"default": env.db("DATABASE_URL")}
-else:
+except django.core.exceptions.ImproperlyConfigured:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
