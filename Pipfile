@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 aiogram = ">=3.3.0,<3.4"
 django = ">=4.2.8,<5"
-"django-axes[ipware]" = ">=6.3.0,<6.4"
+django-axes = ">=6.3.0,<6.4"
 django-celery-beat = ">=2.5.0,<2.6"
 django-celery-results = ">=2.5.1,<2.6"
 django-cleanup = ">=8.0.0,<8.1"
