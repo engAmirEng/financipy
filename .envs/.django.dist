@@ -24,7 +24,7 @@ TELEGRAM_BOT_TOKEN=some-telegram-bot-token
 #TELEGRAM_WEBHOOK_URL=
 TELEGRAM_WEBHOOK_SECRET=some-telegram-unsafe-token
 # {url, default no proxy is being used}
-#PROXY=
+#TELEGRAM_PROXY=
 
 # Security
 # ------------------------------------------------------------------------------

@@ -12,7 +12,7 @@ class Command(BaseCommand):
         parser.add_argument("base_domain", type=str)
 
     def handle(self, *args, **options):
-        session = AiohttpSession(proxy=settings.PROXY)
+        session = AiohttpSession(proxy=settings.TELEGRAM_PROXY)
         bot = Bot(settings.TELEGRAM_BOT_TOKEN, parse_mode=ParseMode.HTML, session=session)
 
         async def main() -> None:
