@@ -65,13 +65,19 @@ async def process_date_technical_builder_handler(message: Message, state: FSMCon
     ikbuilder.button(
         text=_("add hammer"),
         callback_data=TechnicalBuilderCallback(
-            symbol_name=symbol_name, date_after=date_after, hammer=True, trend=False
+            symbol_name=symbol_name, date_after=date_after, hammer=True, trend=False, engulfing=False
         ),
     )
     ikbuilder.button(
         text=_("add trend line"),
         callback_data=TechnicalBuilderCallback(
-            symbol_name=symbol_name, date_after=date_after, hammer=False, trend=True
+            symbol_name=symbol_name, date_after=date_after, hammer=False, trend=True, engulfing=False
+        ),
+    )
+    ikbuilder.button(
+        text=_("add engulfing"),
+        callback_data=TechnicalBuilderCallback(
+            symbol_name=symbol_name, date_after=date_after, hammer=False, trend=False, engulfing=True
         ),
     )
     await bot.send_photo(
@@ -88,6 +94,7 @@ class TechnicalBuilderCallback(CallbackData, prefix="technical_builder"):
 
     hammer: bool
     trend: bool
+    engulfing: bool
 
 
 @router.callback_query(TechnicalBuilderCallback.filter())
@@ -118,6 +125,29 @@ async def process_main_technical_builder_handler(
         local_callback_data = deepcopy(callback_data)
         local_callback_data.hammer = True
         ikbuilder.button(text=_("add hammer"), callback_data=local_callback_data)
+
+    if callback_data.engulfing:
+        df["Engulfing"] = talib.CDLENGULFING(df["Open"], df["High"], df["Low"], df["Close"])
+        bullish_engulfing_df = pd.DataFrame(index=df.index)
+        bullish_engulfing_df["Close"] = np.where(df["Engulfing"] > 0, df["Close"], np.nan)
+        bearish_engulfing_df = pd.DataFrame(index=df.index)
+        bearish_engulfing_df["Close"] = np.where(df["Engulfing"] < 0, df["Close"], np.nan)
+
+        bullish_engulfing_plt = mpf.make_addplot(
+            bullish_engulfing_df["Close"], scatter=True, markersize=20, color="r", secondary_y=False
+        )
+        bearish_engulfing_plt = mpf.make_addplot(
+            bearish_engulfing_df["Close"], scatter=True, markersize=20, color="g", secondary_y=False
+        )
+        addplot.extend([bullish_engulfing_plt, bearish_engulfing_plt])
+
+        local_callback_data = deepcopy(callback_data)
+        local_callback_data.engulfing = False
+        ikbuilder.button(text=_("remove engulfing"), callback_data=local_callback_data)
+    else:
+        local_callback_data = deepcopy(callback_data)
+        local_callback_data.engulfing = True
+        ikbuilder.button(text=_("add engulfing"), callback_data=local_callback_data)
 
     if callback_data.trend:
         close = df["Close"].values
