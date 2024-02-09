@@ -1,21 +1,13 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as __
 
+from financipy.core.models import SymbolModel
+from financipy.utils.models import TimeStampedModel
+
 from .managers import OHLCManager
 
 
-class SymbolModel(models.Model):
-    name = models.CharField(max_length=63, db_index=True, unique=True)
-
-    class Meta:
-        verbose_name = __("Symbol")
-        db_table = "symbol"
-
-    def __str__(self):
-        return f"{str(self.id)} - {self.name}"
-
-
-class OHLCModel(models.Model):
+class OHLCModel(TimeStampedModel, models.Model):
     objects = OHLCManager()
 
     symbol = models.ForeignKey(SymbolModel, on_delete=models.CASCADE, related_name="ohlc_set")
@@ -24,7 +16,7 @@ class OHLCModel(models.Model):
 
     class Meta:
         verbose_name = __("OHLC")
-        db_table = "ohlc"
+        db_table = "technicalanalysis_ohlc"
 
     def __str__(self):
         return f"{str(self.id)} - {self.symbol.name}"

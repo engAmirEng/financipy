@@ -1,11 +1,6 @@
 from django.contrib import admin
 
-from .models import OHLCModel, SymbolModel
-
-
-@admin.register(SymbolModel)
-class SymbolAdmin(admin.ModelAdmin):
-    pass
+from .models import OHLCModel
 
 
 @admin.register(OHLCModel)

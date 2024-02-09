@@ -14,7 +14,7 @@ from aiogram.types import BufferedInputFile, CallbackQuery, InputMediaPhoto, Mes
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from django.utils.translation import gettext as _
 
-from financipy.core.dispatchers import MenuCallback, MenuType
+from financipy.core.dispatchers.core import MenuCallback, MenuType
 
 from .models import OHLCModel
 from .strategy_utils.hh_hl_lh_ll import get_tline_output, getHigherHighs, getHigherLows, getLowerHighs, getLowerLows

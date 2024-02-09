@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from environ import environ
 
 from ._setup import env
@@ -17,3 +19,9 @@ TELEGRAM_WEBHOOK_SECRET = env.str("TELEGRAM_WEBHOOK_SECRET")
 TELEGRAM_PROXY = env.url("TELEGRAM_PROXY", default=None)
 if TELEGRAM_PROXY:
     TELEGRAM_PROXY = environ.urlunparse(TELEGRAM_PROXY)
+
+TELEGRAM_MIDDLEWARE = ["financipy.telegram_bot.t_middleware.AuthenticationMiddleware"]
+
+# fundamental_analysis
+# ------------------------------------------------------------------------------
+MARKET_WATCHER_NOTIF_WINDOW = timedelta(minutes=20)
