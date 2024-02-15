@@ -20,7 +20,7 @@ class OHLCManager(models.Manager):
             ohlc_obj = await self.aget(symbol__name=symbol_name)
             df = pd.read_csv(ohlc_obj.csv_file)
         except self.model.DoesNotExist:
-            from financipy.technical_analysis.models import SymbolModel
+            from ..core.models import SymbolModel
 
             try:
                 df_dict = await sync_to_async(pytse_client.download)(symbols=symbol_name, adjust=True)

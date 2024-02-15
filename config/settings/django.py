@@ -93,6 +93,8 @@ CACHES = {
 # APPS
 # ------------------------------------------------------------------------------
 LOCAL_APPS = [
+    "financipy.core",
+    "financipy.fundamental_analysis",
     "financipy.technical_analysis",
     "financipy.telegram_bot",
     "financipy.users",
