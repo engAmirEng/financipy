@@ -25,6 +25,7 @@ TELEGRAM_BOT_TOKEN=some-telegram-bot-token
 TELEGRAM_WEBHOOK_SECRET=some-telegram-unsafe-token
 # {url, default no proxy is being used}
 #TELEGRAM_PROXY=
+OPENAI_API_KEY=some-incorrect-openai-api-key
 
 # Security
 # ------------------------------------------------------------------------------

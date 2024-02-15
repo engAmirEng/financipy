@@ -6,6 +6,9 @@ from ._setup import env
 
 # Project's apps stuff...
 # ------------------------------------------------------------------------------
+
+OPENAI_API_KEY = env.str("OPENAI_API_KEY")
+
 # graphql
 # ------------------------------------------------------------------------------
 # show graphiql panel or not

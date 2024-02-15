@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 from zoneinfo import ZoneInfo
 
 import jdatetime
+import openai
 import requests
 from asgiref.sync import async_to_sync
 from bs4 import BeautifulSoup
@@ -106,3 +107,32 @@ def market_watcher_notif_sender():
         satisfy(profile=profile, mwns=mwns)
         chat_count += 1
     return {"chat_count": chat_count}
+
+
+@shared_task
+def populate_market_watcher_notif_ai_fields():
+    client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+
+    populated_count = 0
+
+    for market_watcher_notif_obj in MarketWatcherNotifModel.objects.all().need_ai_population():
+        completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "تو یک دستیار هستی که پیغام های ناظر بورس ایران را"
+                    " که من برایت ارسال میکنم به زبانی گویا باز نویسی میکنی",
+                },
+                {
+                    "role": "user",
+                    "content": f"{market_watcher_notif_obj.original_title}\n\n"
+                    f"{market_watcher_notif_obj.original_body}",
+                },
+            ],
+        )
+        res = completion.choices[0].message.content
+        market_watcher_notif_obj.ai_body = res
+        market_watcher_notif_obj.save()
+        populated_count += 1
+    return {"populated_count": populated_count}
