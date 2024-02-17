@@ -5,7 +5,7 @@ from financipy.utils.models import TimeStampedModel
 
 
 class MarketType(models.TextChoices):
-    tehran_stock_exchange = "tehran_stock_exchange", __("Tehran Stock Exchange")
+    TEHRAN_STOCK_EXCHANGE = "tehran_stock_exchange", __("Tehran Stock Exchange")
 
 
 class SymbolModel(TimeStampedModel, models.Model):

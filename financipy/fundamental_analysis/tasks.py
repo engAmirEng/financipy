@@ -81,7 +81,8 @@ def market_watcher_notif_sender():
             for mwn in mwns:
                 if profile.ai_boosted and not mwn.ai_boosted_yet:
                     continue
-                body += f"#{mwn.related_symbol.name}" + "\n"
+                if mwn.related_symbol.name:
+                    body += f"#{mwn.related_symbol.name}" + "\n"
                 body += mwn.original_title + "\n"
                 body += mwn.original_body + "\n"
                 body += "\n\n\n"

@@ -3,6 +3,8 @@ from typing import TYPE_CHECKING
 from django.db import models
 from django.db.models import Q
 
+from ..core.models import MarketType
+
 if TYPE_CHECKING:
     from .models import MarketWatcherNotifModel, MarketWatcherNotifProfileModel
     from .types import TSETMCWatcherNotificationDataDict
@@ -22,6 +24,7 @@ class MarketWatcherNotifManager(models.Manager):
         new_obj.original_title = record["title"]
         new_obj.original_body = record["body"]
         new_obj.publish_time = record["time"]
+        new_obj.related_market = MarketType.TEHRAN_STOCK_EXCHANGE
         new_obj.save()
         return new_obj
 
