@@ -14,7 +14,6 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from django.conf import settings
-from django.db.models import QuerySet
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
@@ -60,6 +59,8 @@ def tsetmc_market_watcher_notifs_watcher():
 
 @shared_task
 def market_watcher_notif_sender():
+    from financipy.fundamental_analysis.dispatchers import SeeMarketWatcherNotificationModeCallback
+
     session = AiohttpSession(proxy=settings.TELEGRAM_PROXY)
     bot = Bot(settings.TELEGRAM_BOT_TOKEN, parse_mode=ParseMode.HTML, session=session)
 
@@ -72,40 +73,34 @@ def market_watcher_notif_sender():
         mwns = candidate_mwns.exclude(marketwatchernotifsatisfy_set__profile=profile)
         if len(mwns) == 0:
             continue
+        body = ""
+        market_watcher_notif_satisfy_objs = []
+        for mwn in mwns:
+            if profile.ai_boosted and not mwn.ai_boosted_yet:
+                continue
+            if mwn.related_symbol:
+                body += f"#{mwn.related_symbol.name}" + "\n"
+            body += mwn.original_title + "\n"
+            body += mwn.original_body + "\n"
+            body += "\n\n\n"
 
-        def satisfy(profile: MarketWatcherNotifProfileModel, mwns: QuerySet[MarketWatcherNotifModel]):
-            from financipy.fundamental_analysis.dispatchers import SeeMarketWatcherNotificationModeCallback
-
-            body = ""
-            market_watcher_notif_satisfy_objs = []
-            for mwn in mwns:
-                if profile.ai_boosted and not mwn.ai_boosted_yet:
-                    continue
-                if mwn.related_symbol:
-                    body += f"#{mwn.related_symbol.name}" + "\n"
-                body += mwn.original_title + "\n"
-                body += mwn.original_body + "\n"
-                body += "\n\n\n"
-
-                market_watcher_notif_satisfy_obj = MarketWatcherNotifSatisfyModel(
-                    profile=profile, notif=mwn, ai_boosted=profile.ai_boosted
-                )
-                market_watcher_notif_satisfy_objs.append(market_watcher_notif_satisfy_obj)
-            if not body:
-                return
-            ikbuilder = InlineKeyboardBuilder()
-            ikbuilder.button(
-                text=_("see in original mode") if profile.ai_boosted else _("see in ai boosted mode"),
-                callback_data=SeeMarketWatcherNotificationModeCallback(
-                    json_notification_ids=json.dumps([i.id for i in mwns]), ai_boosted=not profile.ai_boosted
-                ),
+            market_watcher_notif_satisfy_obj = MarketWatcherNotifSatisfyModel(
+                profile=profile, notif=mwn, ai_boosted=profile.ai_boosted
             )
-            async_to_sync(bot.send_message)(
-                chat_id=profile.user.st_profile.user_oid, text=body, reply_markup=ikbuilder.as_markup()
-            )
-            MarketWatcherNotifSatisfyModel.objects.bulk_create(market_watcher_notif_satisfy_objs)
-
-        satisfy(profile=profile, mwns=mwns)
+            market_watcher_notif_satisfy_objs.append(market_watcher_notif_satisfy_obj)
+        if not body:
+            return
+        ikbuilder = InlineKeyboardBuilder()
+        ikbuilder.button(
+            text=_("see in original mode") if profile.ai_boosted else _("see in ai boosted mode"),
+            callback_data=SeeMarketWatcherNotificationModeCallback(
+                json_notification_ids=json.dumps([i.id for i in mwns]), ai_boosted=not profile.ai_boosted
+            ),
+        )
+        async_to_sync(bot.send_message)(
+            chat_id=profile.user.st_profile.user_oid, text=body, reply_markup=ikbuilder.as_markup()
+        )
+        MarketWatcherNotifSatisfyModel.objects.bulk_create(market_watcher_notif_satisfy_objs)
         chat_count += 1
     return {"chat_count": chat_count}
 
