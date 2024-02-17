@@ -90,7 +90,7 @@ async def see_market_watcher_notification_mode_handler(
     mwns = MarketWatcherNotifModel.objects.filter(id__in=notification_ids).select_related("related_symbol")
     body = ""
     async for mwn in mwns:
-        if mwn.related_symbol.name:
+        if mwn.related_symbol:
             body += f"#{mwn.related_symbol.name}" + "\n"
         if callback_data.ai_boosted:
             if not mwn.ai_boosted_yet:
