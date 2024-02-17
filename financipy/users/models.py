@@ -1,11 +1,15 @@
 from typing import TYPE_CHECKING, Optional
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.db.models import CharField
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as __
 
 from financipy.users.managers import UserManager
 from financipy.utils.models import TimeStampedModel
+from financipy.utils.validators import validate_zoneinfo
 
 if TYPE_CHECKING:
     from financipy.telegram_bot.models import TelegramUserProfileModel
@@ -48,3 +52,22 @@ class User(AbstractUser, TimeStampedModel):
             t_profile = self.telegramuserprofile_set.get(is_default=True)
             self._t_profile = t_profile
         return self._t_profile
+
+
+class UserProfileModel(TimeStampedModel, models.Model):
+    class Calendar(models.TextChoices):
+        GREGORIAN = "gregorian", __("gregorian")
+        SOLAR_HIJRI = "solar_hijri", __("solar hijri")
+
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="userprofile", primary_key=True
+    )
+
+    preferred_language = models.CharField(max_length=3, choices=settings.LANGUAGES, null=True, blank=True)
+    latest_language = models.CharField(max_length=3, choices=settings.LANGUAGES)
+    preferred_timezone = models.CharField(max_length=15, validators=[validate_zoneinfo])
+    preferred_calendar = models.CharField(max_length=15, choices=Calendar.choices)
+
+    class Meta:
+        verbose_name = __("User Profile")
+        db_table = "users_userprofile"

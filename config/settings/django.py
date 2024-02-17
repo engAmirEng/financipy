@@ -42,8 +42,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # I18N and L10N
 # ------------------------------------------------------------------------------
-TIME_ZONE = "UTC"
-LANGUAGE_CODE = "en-us"
+TIME_ZONE = "Asia/Tehran"
+LANGUAGE_CODE = "fa"
 LANGUAGES = [
     ("en", __("English")),
     ("fa", __("Persian")),
@@ -170,10 +170,10 @@ MIDDLEWARE = clean_ellipsis(
         "corsheaders.middleware.CorsMiddleware",
         "whitenoise.middleware.WhiteNoiseMiddleware" if PLUGGABLE_FUNCS.SERVE_STATICFILES else ...,
         "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.middleware.locale.LocaleMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "financipy.users.middleware.FullLocaleMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         # It only formats user lockout messages and renders Axes lockout responses

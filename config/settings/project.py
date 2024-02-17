@@ -23,7 +23,10 @@ TELEGRAM_PROXY = env.url("TELEGRAM_PROXY", default=None)
 if TELEGRAM_PROXY:
     TELEGRAM_PROXY = environ.urlunparse(TELEGRAM_PROXY)
 
-TELEGRAM_MIDDLEWARE = ["financipy.telegram_bot.t_middleware.AuthenticationMiddleware"]
+TELEGRAM_MIDDLEWARE = [
+    "financipy.telegram_bot.t_middleware.AuthenticationMiddleware",
+    "financipy.telegram_bot.t_middleware.FullLocaleMiddleware",
+]
 
 # fundamental_analysis
 # ------------------------------------------------------------------------------
