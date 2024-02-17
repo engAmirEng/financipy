@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+from environ import environ
+
 from ._setup import PLUGGABLE_FUNCS, clean_ellipsis, env
 from .django import DEBUG
 
@@ -80,3 +82,23 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }
+
+# sentry
+# -------------------------------------------------------------------------------
+
+if PLUGGABLE_FUNCS.SENTRY:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=environ.urlunparse(env.url("SENTRY_DSN")),
+        integrations=[DjangoIntegration()],
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=env.float("SENTRY_TRACE_RATE", 0.2),
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production
+        profiles_sample_rate=env.float("SENTRY_PROFILE_RATE", 0.2),
+    )

@@ -47,6 +47,14 @@ DJANGO_SECRET_KEY=some-random-unsecure-fsdfsajkgkjsbgkjsahd87549yhiqhwrwy48y84
 # {bool, default to false}
 #DJANGO_SECURE_HSTS_PRELOAD=
 
+# Sentry
+# ------------------------------------------------------------------------------
+# {url, required if SENTRY in pluggables}
+#SENTRY_DSN=
+# {float, default to 0.2}
+#SENTRY_TRACE_RATE=
+# {float, default to 0.2}
+#SENTRY_PROFILE_RATE=
 
 # Gunicorn
 # ------------------------------------------------------------------------------

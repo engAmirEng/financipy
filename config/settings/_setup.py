@@ -40,7 +40,7 @@ if READ_DOT_ENV_FILE:
 
 
 # Define pluggable functionalities
-pluggable_available = ["DEBUG_TOOLBAR", "NO_PASS_VALIDATION", "SERVE_STATICFILES"]
+pluggable_available = ["DEBUG_TOOLBAR", "NO_PASS_VALIDATION", "SERVE_STATICFILES", "SENTRY"]
 pluggable_enabled = env.list("PLUGGABLES")
 for p in pluggable_enabled:
     if p not in pluggable_available:
@@ -57,4 +57,5 @@ class PLUGGABLE_FUNCS:
 
     DEBUG_TOOLBAR = "DEBUG_TOOLBAR" in pluggable_enabled
     NO_PASS_VALIDATION = "NO_PASS_VALIDATION" in pluggable_enabled
+    SENTRY = "SENTRY" in pluggable_enabled
     SERVE_STATICFILES = "SERVE_STATICFILES" in pluggable_enabled
