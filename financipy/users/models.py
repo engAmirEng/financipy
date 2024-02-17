@@ -7,7 +7,7 @@ from django.db.models import CharField
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import gettext_lazy as __
 
-from financipy.users.managers import UserManager
+from financipy.users.managers import UserManager, UserProfileManager
 from financipy.utils.models import TimeStampedModel
 from financipy.utils.validators import validate_zoneinfo
 
@@ -67,6 +67,8 @@ class UserProfileModel(TimeStampedModel, models.Model):
     latest_language = models.CharField(max_length=3, choices=settings.LANGUAGES)
     preferred_timezone = models.CharField(max_length=15, validators=[validate_zoneinfo])
     preferred_calendar = models.CharField(max_length=15, choices=Calendar.choices)
+
+    objects = UserProfileManager()
 
     class Meta:
         verbose_name = __("User Profile")
